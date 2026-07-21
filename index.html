@@ -54,6 +54,10 @@
   .hv-faq:hover{background:color-mix(in srgb,var(--accent) 7%,var(--cream))}
   .hv-social:hover{background:rgba(255,255,255,.26)}
   .field:focus{border-color:var(--accent)}
+  /* frosted header: keep the blur on a static ::before layer, NOT on the sticky
+     element itself — a sticky element that also owns backdrop-filter re-samples
+     the animated page background on every scroll frame and flickers in Chrome */
+  .fx-header::before{content:"";position:absolute;inset:0;z-index:-1;background:color-mix(in srgb,var(--cream) 72%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);pointer-events:none}
   /* responsive nav (compiled from isMobile / isDesktop) */
   .fx-mobile-only{display:none}
   .fx-desktop-only{display:block}
@@ -76,7 +80,7 @@
   </div>
 
   <!-- ============ NAV ============ -->
-  <header style="position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--cream) 72%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);transform:translateZ(0);backface-visibility:hidden">
+  <header class="fx-header" style="position:sticky;top:0;z-index:50;border-bottom:1px solid var(--line);isolation:isolate">
     <nav style="max-width:1200px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px">
       <a href="#top" style="display:flex;align-items:center;gap:11px;font-family:Space Grotesk,sans-serif;font-weight:700;font-size:20px;letter-spacing:-.02em">
         <span style="width:38px;height:38px;border-radius:11px;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px -6px color-mix(in srgb,var(--accent) 70%,transparent)">
