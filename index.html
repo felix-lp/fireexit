@@ -27,6 +27,8 @@
   @keyframes fx-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.72)}}
   @keyframes fx-nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
   [data-reveal]{opacity:0;transform:translateY(30px) scale(.97);animation:fx-reveal linear both;animation-timeline:view();animation-range:entry 0% cover 30%}
+  /* reveal + infinite glow on one element: list both animations so the glow doesn't clobber the reveal (and leave opacity stuck at 0) */
+  [data-reveal][data-glow]{animation:fx-reveal linear both,fx-glow 3.6s ease-in-out infinite;animation-timeline:view(),auto;animation-range:entry 0% cover 30%,normal}
   [data-parallax]{animation:fx-parallax linear both;animation-timeline:scroll(root);animation-range:0 110vh}
   .fx-shine-btn{position:relative;overflow:hidden}
   [data-orb]{animation-name:fx-orb}
@@ -36,8 +38,8 @@
   @keyframes fx-draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
   .fx-track{transform-origin:left center;animation:fx-draw linear both;animation-timeline:view();animation-range:entry 10% cover 40%}
   .fx-shine-btn::after{content:"";position:absolute;top:0;bottom:0;left:0;width:35%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);transform:translateX(-120%) skewX(-18deg);animation:fx-shine 4.5s ease-in-out infinite;pointer-events:none}
-  @supports not (animation-timeline: view()){[data-reveal]{opacity:1;transform:none;animation:none}[data-parallax]{animation:none}}
-  @media (prefers-reduced-motion: reduce){[data-orb],[data-glow],.fx-track{animation:none!important}[data-glow]{transform:none}.fx-shine-btn::after{animation:none;display:none}}
+  @supports not (animation-timeline: view()){[data-reveal]{opacity:1;transform:none;animation:none}[data-glow]{animation:fx-glow 3.6s ease-in-out infinite}[data-parallax]{animation:none}}
+  @media (prefers-reduced-motion: reduce){[data-orb],[data-glow],.fx-track{animation:none!important}[data-glow]{transform:none;opacity:1}.fx-shine-btn::after{animation:none;display:none}}
 </style>
 <style>
   /* hover / focus effects (compiled from style-hover / style-focus) */
@@ -74,7 +76,7 @@
   </div>
 
   <!-- ============ NAV ============ -->
-  <header style="position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--cream) 72%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)">
+  <header style="position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--cream) 72%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);transform:translateZ(0);backface-visibility:hidden">
     <nav style="max-width:1200px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px">
       <a href="#top" style="display:flex;align-items:center;gap:11px;font-family:Space Grotesk,sans-serif;font-weight:700;font-size:20px;letter-spacing:-.02em">
         <span style="width:38px;height:38px;border-radius:11px;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px -6px color-mix(in srgb,var(--accent) 70%,transparent)">
@@ -328,7 +330,7 @@
         <a href="#kontakty" style="margin-top:auto;padding-top:26px"><span style="display:block;text-align:center;background:var(--paper);border:1px solid var(--accent);color:var(--accent-d);padding:13px;border-radius:12px;font-weight:600;font-size:15px;transition:background .15s" class="hv-outline">Выбрать</span></a>
       </div>
 
-      <div data-reveal data-glow style="border:2px solid var(--accent);border-radius:24px;padding:32px;background:var(--paper);display:flex;flex-direction:column;height:100%;position:relative;box-shadow:0 24px 50px -30px color-mix(in srgb,var(--accent) 55%,transparent);animation:fx-glow 3.6s ease-in-out infinite;transition:transform .2s" class="hv-lift6">
+      <div data-reveal data-glow style="border:2px solid var(--accent);border-radius:24px;padding:32px;background:var(--paper);display:flex;flex-direction:column;height:100%;position:relative;box-shadow:0 24px 50px -30px color-mix(in srgb,var(--accent) 55%,transparent);transition:transform .2s" class="hv-lift6">
         <span class="fx-shine-btn" style="position:absolute;top:-13px;left:32px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;padding:5px 12px;border-radius:100px">Популярно</span>
         <h3 style="font-family:Space Grotesk,sans-serif;font-size:20px;font-weight:600">Сайт «под ключ»</h3>
         <p style="font-size:14px;color:var(--muted);margin:8px 0 0;line-height:1.5">Многостраничный сайт для бизнеса</p>
