@@ -12,8 +12,8 @@
   *{box-sizing:border-box;margin:0;padding:0}
   /* fill html/body with the theme base so the animated #fx-root layer can't
      expose a white gap at the top/bottom edges during fast scroll or overscroll */
-  html{scroll-behavior:smooth;background:#EAF2E0;overscroll-behavior:none}
-  body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;background:#EAF2E0}
+  html{scroll-behavior:smooth;background:#EAF2E0;overscroll-behavior:none;overflow-x:clip}
+  body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;background:#EAF2E0;overflow-x:clip}
   a{color:inherit;text-decoration:none}
   a:hover{color:var(--accent,#2E6B3A)}
   input,textarea,button{font-family:inherit}
@@ -60,10 +60,27 @@
      element itself — a sticky element that also owns backdrop-filter re-samples
      the animated page background on every scroll frame and flickers in Chrome */
   .fx-header::before{content:"";position:absolute;inset:0;z-index:-1;background:color-mix(in srgb,var(--cream) 72%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);pointer-events:none}
-  /* interactive 3D hero visual — idle drift on the stage, cursor-driven tilt on the inner layer */
+  /* interactive 3D hero visual:
+     - .fx-hero-stage  : gentle up/down float
+     - .fx-tilt-idle   : continuous auto 3D wobble so depth is visible with no cursor / on touch
+     - .fx-tilt        : cursor-driven tilt (JS sets --fx-rx/--fx-ry); idle wobble pauses on hover */
   .fx-hero-stage{animation:fx-float 6s ease-in-out infinite}
+  .fx-tilt-idle{transform-style:preserve-3d;animation:fx-tilt-idle 11s ease-in-out infinite}
+  .fx-hero-stage:hover .fx-tilt-idle{animation-play-state:paused}
   .fx-tilt{position:relative;transform-style:preserve-3d;transform:rotateX(var(--fx-rx,0deg)) rotateY(var(--fx-ry,0deg));transition:transform .3s ease-out}
-  @media (prefers-reduced-motion:reduce){.fx-hero-stage{animation:none}.fx-tilt{transform:none!important}}
+  @keyframes fx-tilt-idle{0%{transform:rotateX(7deg) rotateY(-14deg)}25%{transform:rotateX(-3deg) rotateY(-4deg)}50%{transform:rotateX(-8deg) rotateY(12deg)}75%{transform:rotateX(2deg) rotateY(1deg)}100%{transform:rotateX(7deg) rotateY(-14deg)}}
+  .fx-chip{position:absolute;background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:12px 15px;box-shadow:0 24px 48px -22px rgba(19,28,22,.5)}
+  .fx-chip-tr{top:-24px;right:-16px;transform:translateZ(85px)}
+  .fx-chip-bl{bottom:-22px;left:-16px;transform:translateZ(60px)}
+  @media (max-width:600px){
+    .fx-hero-stage{max-width:min(420px,calc(100vw - 96px))}
+    .fx-tilt-idle{animation-name:fx-tilt-idle-sm}
+    .fx-chip{padding:10px 13px}
+    .fx-chip-tr{top:-12px;right:10px;transform:translateZ(24px)}
+    .fx-chip-bl{bottom:-12px;left:10px;transform:translateZ(16px)}
+  }
+  @keyframes fx-tilt-idle-sm{0%{transform:rotateX(4deg) rotateY(-6deg)}50%{transform:rotateX(-4deg) rotateY(6deg)}100%{transform:rotateX(4deg) rotateY(-6deg)}}
+  @media (prefers-reduced-motion:reduce){.fx-hero-stage,.fx-tilt-idle{animation:none}.fx-tilt,.fx-tilt-idle{transform:none!important}}
   /* responsive nav (compiled from isMobile / isDesktop) */
   .fx-mobile-only{display:none}
   .fx-desktop-only{display:block}
@@ -163,6 +180,7 @@
     <!-- interactive 3D hero visual: layered panels that tilt toward the cursor (JS at page end) -->
     <div id="fx-hero-visual" data-parallax style="position:relative;z-index:1;flex:1 1 360px;min-width:280px;display:flex;justify-content:center;will-change:transform">
       <div class="fx-hero-stage" style="position:relative;width:100%;max-width:420px;perspective:1100px">
+        <div class="fx-tilt-idle">
         <div id="fx-tilt" class="fx-tilt">
           <!-- depth glow behind the card -->
           <div aria-hidden="true" style="position:absolute;inset:6% 4%;border-radius:36px;background:radial-gradient(60% 60% at 62% 28%,color-mix(in srgb,var(--accent-l) 72%,transparent),transparent 70%);filter:blur(32px);transform:translateZ(-60px);opacity:.75"></div>
@@ -190,7 +208,7 @@
           </div>
 
           <!-- floating chip: адаптив (closest to viewer) -->
-          <div style="position:absolute;top:-24px;right:-16px;transform:translateZ(85px);background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:12px 15px;box-shadow:0 24px 48px -22px rgba(19,28,22,.5)">
+          <div class="fx-chip fx-chip-tr">
             <div style="display:flex;align-items:center;gap:10px">
               <span style="width:32px;height:32px;border-radius:9px;background:color-mix(in srgb,var(--accent) 15%,var(--cream));display:flex;align-items:center;justify-content:center;flex-shrink:0">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent-d)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2"></rect><path d="M11 18h2"></path></svg>
@@ -200,7 +218,7 @@
           </div>
 
           <!-- floating chip: сроки -->
-          <div style="position:absolute;bottom:-22px;left:-16px;transform:translateZ(60px);background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:12px 15px;box-shadow:0 24px 48px -22px rgba(19,28,22,.5)">
+          <div class="fx-chip fx-chip-bl">
             <div style="display:flex;align-items:center;gap:10px">
               <span style="width:32px;height:32px;border-radius:9px;background:color-mix(in srgb,var(--accent) 15%,var(--cream));display:flex;align-items:center;justify-content:center;flex-shrink:0">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent-d)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"></path></svg>
@@ -208,6 +226,7 @@
               <div><div style="font-size:13.5px;font-weight:700;color:var(--ink)">7–14 дней</div><div style="font-size:11.5px;color:var(--muted)">до запуска</div></div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>
