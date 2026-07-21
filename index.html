@@ -61,26 +61,25 @@
      the animated page background on every scroll frame and flickers in Chrome */
   .fx-header::before{content:"";position:absolute;inset:0;z-index:-1;background:color-mix(in srgb,var(--cream) 72%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);pointer-events:none}
   /* interactive 3D hero visual:
-     - .fx-hero-stage  : gentle up/down float
-     - .fx-tilt-idle   : continuous auto 3D wobble so depth is visible with no cursor / on touch
-     - .fx-tilt        : cursor-driven tilt (JS sets --fx-rx/--fx-ry); idle wobble pauses on hover */
-  .fx-hero-stage{animation:fx-float 6s ease-in-out infinite}
-  .fx-tilt-idle{transform-style:preserve-3d;animation:fx-tilt-idle 11s ease-in-out infinite}
-  .fx-hero-stage:hover .fx-tilt-idle{animation-play-state:paused}
-  .fx-tilt{position:relative;transform-style:preserve-3d;transform:rotateX(var(--fx-rx,0deg)) rotateY(var(--fx-ry,0deg));transition:transform .3s ease-out}
+     - desktop (hover): NO auto-rotation, NO float — the card only tilts toward the
+       cursor, tracked across the whole screen (JS sets --fx-rx / --fx-ry).
+     - touch (no cursor): a gentle auto 3D wobble so it isn't dead. */
+  .fx-tilt-idle{transform-style:preserve-3d}
+  .fx-tilt{position:relative;transform-style:preserve-3d;transform:rotateX(var(--fx-rx,0deg)) rotateY(var(--fx-ry,0deg));transition:transform .25s ease-out}
+  @media (hover:none){.fx-tilt-idle{animation:fx-tilt-idle 11s ease-in-out infinite}}
   @keyframes fx-tilt-idle{0%{transform:rotateX(7deg) rotateY(-14deg)}25%{transform:rotateX(-3deg) rotateY(-4deg)}50%{transform:rotateX(-8deg) rotateY(12deg)}75%{transform:rotateX(2deg) rotateY(1deg)}100%{transform:rotateX(7deg) rotateY(-14deg)}}
   .fx-chip{position:absolute;background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:12px 15px;box-shadow:0 24px 48px -22px rgba(19,28,22,.5)}
   .fx-chip-tr{top:-24px;right:-16px;transform:translateZ(85px)}
   .fx-chip-bl{bottom:-22px;left:-16px;transform:translateZ(60px)}
   @media (max-width:600px){
-    .fx-hero-stage{max-width:min(420px,calc(100vw - 96px))}
+    .fx-hero-stage{max-width:min(420px,calc(100vw - 96px))!important}
     .fx-tilt-idle{animation-name:fx-tilt-idle-sm}
     .fx-chip{padding:10px 13px}
     .fx-chip-tr{top:-12px;right:10px;transform:translateZ(24px)}
     .fx-chip-bl{bottom:-12px;left:10px;transform:translateZ(16px)}
   }
   @keyframes fx-tilt-idle-sm{0%{transform:rotateX(4deg) rotateY(-6deg)}50%{transform:rotateX(-4deg) rotateY(6deg)}100%{transform:rotateX(4deg) rotateY(-6deg)}}
-  @media (prefers-reduced-motion:reduce){.fx-hero-stage,.fx-tilt-idle{animation:none}.fx-tilt,.fx-tilt-idle{transform:none!important}}
+  @media (prefers-reduced-motion:reduce){.fx-tilt-idle{animation:none}.fx-tilt,.fx-tilt-idle{transform:none!important}}
   /* responsive nav (compiled from isMobile / isDesktop) */
   .fx-mobile-only{display:none}
   .fx-desktop-only{display:block}
@@ -628,7 +627,8 @@
     });
   }
 
-  // Hero visual: tilt the layered 3D card toward the cursor (pointer devices only)
+  // Hero visual: the card tilts toward the cursor, tracked across the whole
+  // viewport (pointer devices only; touch keeps the CSS auto-wobble)
   var stage = document.getElementById('fx-hero-visual');
   var tilt = document.getElementById('fx-tilt');
   var canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
@@ -640,18 +640,17 @@
       tilt.style.setProperty('--fx-rx', rx.toFixed(2) + 'deg');
       tilt.style.setProperty('--fx-ry', ry.toFixed(2) + 'deg');
     }
-    stage.addEventListener('pointermove', function (e) {
+    window.addEventListener('pointermove', function (e) {
       var r = stage.getBoundingClientRect();
-      var px = (e.clientX - r.left) / r.width - 0.5;   // -0.5 .. 0.5
-      var py = (e.clientY - r.top) / r.height - 0.5;
-      rx = Math.max(-1, Math.min(1, -py * 2)) * 12;      // tilt up/down
-      ry = Math.max(-1, Math.min(1, px * 2)) * 14;       // tilt left/right
+      var cx = r.left + r.width / 2, cy = r.top + r.height / 2;   // card centre
+      var dx = (e.clientX - cx) / (window.innerWidth / 2);         // -1 .. 1 across the screen
+      var dy = (e.clientY - cy) / (window.innerHeight / 2);
+      dx = Math.max(-1, Math.min(1, dx));
+      dy = Math.max(-1, Math.min(1, dy));
+      ry = dx * 15;    // look left/right toward the cursor
+      rx = -dy * 12;   // look up/down toward the cursor
       if (!raf) raf = requestAnimationFrame(apply);
-    });
-    stage.addEventListener('pointerleave', function () {
-      rx = 0; ry = 0;
-      if (!raf) raf = requestAnimationFrame(apply);
-    });
+    }, { passive: true });
   }
 
   var y = document.getElementById('fx-year');
