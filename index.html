@@ -60,6 +60,10 @@
      element itself — a sticky element that also owns backdrop-filter re-samples
      the animated page background on every scroll frame and flickers in Chrome */
   .fx-header::before{content:"";position:absolute;inset:0;z-index:-1;background:color-mix(in srgb,var(--cream) 72%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);pointer-events:none}
+  /* interactive 3D hero visual — idle drift on the stage, cursor-driven tilt on the inner layer */
+  .fx-hero-stage{animation:fx-float 6s ease-in-out infinite}
+  .fx-tilt{position:relative;transform-style:preserve-3d;transform:rotateX(var(--fx-rx,0deg)) rotateY(var(--fx-ry,0deg));transition:transform .3s ease-out}
+  @media (prefers-reduced-motion:reduce){.fx-hero-stage{animation:none}.fx-tilt{transform:none!important}}
   /* responsive nav (compiled from isMobile / isDesktop) */
   .fx-mobile-only{display:none}
   .fx-desktop-only{display:block}
@@ -156,29 +160,53 @@
       </div>
     </div>
 
-    <!-- Exit-sign concept visual -->
-    <div style="position:relative;z-index:1;flex:1 1 360px;min-width:280px;display:flex;justify-content:center">
-      <div data-parallax style="position:relative;width:100%;max-width:420px;will-change:transform">
-        <div style="background:var(--accent);border-radius:28px;padding:44px 40px;color:#fff;box-shadow:0 30px 60px -30px color-mix(in srgb,var(--accent-d) 90%,transparent);position:relative;overflow:hidden">
-          <div style="position:absolute;inset:0;background:radial-gradient(120% 90% at 80% 0%,color-mix(in srgb,#fff 14%,transparent),transparent 60%)"></div>
-          <div style="position:relative;display:flex;align-items:center;justify-content:space-between">
-            <span style="font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;opacity:.85">Выход есть</span>
-            <span style="font-size:11px;font-weight:600;letter-spacing:.1em;opacity:.7;border:1px solid rgba(255,255,255,.35);padding:4px 9px;border-radius:100px">EXIT</span>
+    <!-- interactive 3D hero visual: layered panels that tilt toward the cursor (JS at page end) -->
+    <div id="fx-hero-visual" data-parallax style="position:relative;z-index:1;flex:1 1 360px;min-width:280px;display:flex;justify-content:center;will-change:transform">
+      <div class="fx-hero-stage" style="position:relative;width:100%;max-width:420px;perspective:1100px">
+        <div id="fx-tilt" class="fx-tilt">
+          <!-- depth glow behind the card -->
+          <div aria-hidden="true" style="position:absolute;inset:6% 4%;border-radius:36px;background:radial-gradient(60% 60% at 62% 28%,color-mix(in srgb,var(--accent-l) 72%,transparent),transparent 70%);filter:blur(32px);transform:translateZ(-60px);opacity:.75"></div>
+
+          <!-- main card: mini growth panel -->
+          <div style="position:relative;transform:translateZ(16px);background:linear-gradient(158deg,var(--accent),var(--accent-d));border-radius:26px;padding:26px 26px 30px;color:#fff;box-shadow:0 44px 84px -38px color-mix(in srgb,var(--accent-d) 92%,transparent);overflow:hidden">
+            <div aria-hidden="true" style="position:absolute;inset:0;background:radial-gradient(120% 90% at 82% 0%,rgba(255,255,255,.18),transparent 60%)"></div>
+            <div style="position:relative;display:flex;align-items:center;justify-content:space-between">
+              <span style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;opacity:.82">Заявки с сайта</span>
+              <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);padding:4px 10px;border-radius:100px">
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14l5-5 4 4 7-7"></path><path d="M17 6h4v4"></path></svg>
+                рост
+              </span>
+            </div>
+            <!-- rising bar chart (illustrative) -->
+            <div style="position:relative;display:flex;align-items:flex-end;gap:9px;height:120px;margin:22px 0 0">
+              <div style="flex:1;height:32%;background:rgba(255,255,255,.26);border-radius:7px 7px 3px 3px"></div>
+              <div style="flex:1;height:46%;background:rgba(255,255,255,.34);border-radius:7px 7px 3px 3px"></div>
+              <div style="flex:1;height:40%;background:rgba(255,255,255,.30);border-radius:7px 7px 3px 3px"></div>
+              <div style="flex:1;height:63%;background:rgba(255,255,255,.5);border-radius:7px 7px 3px 3px"></div>
+              <div style="flex:1;height:79%;background:rgba(255,255,255,.7);border-radius:7px 7px 3px 3px"></div>
+              <div style="flex:1;height:100%;background:#fff;border-radius:7px 7px 3px 3px"></div>
+            </div>
+            <div style="position:relative;font-family:Space Grotesk,sans-serif;font-size:22px;font-weight:700;line-height:1.15;margin:22px 0 0">Из идеи — в поток<br>клиентов</div>
           </div>
-          <div style="position:relative;display:flex;align-items:center;gap:18px;margin:30px 0 8px">
-            <svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>
-            <div>
-              <div style="font-family:Space Grotesk,sans-serif;font-size:26px;font-weight:700;line-height:1.1">Из идеи —<br>в рабочий сайт</div>
+
+          <!-- floating chip: адаптив (closest to viewer) -->
+          <div style="position:absolute;top:-24px;right:-16px;transform:translateZ(85px);background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:12px 15px;box-shadow:0 24px 48px -22px rgba(19,28,22,.5)">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="width:32px;height:32px;border-radius:9px;background:color-mix(in srgb,var(--accent) 15%,var(--cream));display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent-d)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2"></rect><path d="M11 18h2"></path></svg>
+              </span>
+              <div><div style="font-size:13.5px;font-weight:700;color:var(--ink)">Адаптив</div><div style="font-size:11.5px;color:var(--muted)">под мобилки</div></div>
             </div>
           </div>
-        </div>
-        <!-- floating chip -->
-        <div style="position:absolute;bottom:-22px;left:-14px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 18px;box-shadow:0 18px 40px -20px rgba(0,0,0,.3);animation:fx-float 5s ease-in-out infinite">
-          <div style="display:flex;align-items:center;gap:10px">
-            <span style="width:34px;height:34px;border-radius:9px;background:color-mix(in srgb,var(--accent) 15%,var(--cream));display:flex;align-items:center;justify-content:center">
-              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="var(--accent-d)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
-            </span>
-            <div><div style="font-size:14px;font-weight:700">Адаптив под мобилки</div><div style="font-size:12px;color:var(--muted)">по умолчанию</div></div>
+
+          <!-- floating chip: сроки -->
+          <div style="position:absolute;bottom:-22px;left:-16px;transform:translateZ(60px);background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:12px 15px;box-shadow:0 24px 48px -22px rgba(19,28,22,.5)">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="width:32px;height:32px;border-radius:9px;background:color-mix(in srgb,var(--accent) 15%,var(--cream));display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent-d)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"></path></svg>
+              </span>
+              <div><div style="font-size:13.5px;font-weight:700;color:var(--ink)">7–14 дней</div><div style="font-size:11.5px;color:var(--muted)">до запуска</div></div>
+            </div>
           </div>
         </div>
       </div>
@@ -578,6 +606,32 @@
       var ok = document.getElementById('fx-form-success');
       if (wrap) wrap.hidden = true;
       if (ok) ok.hidden = false;
+    });
+  }
+
+  // Hero visual: tilt the layered 3D card toward the cursor (pointer devices only)
+  var stage = document.getElementById('fx-hero-visual');
+  var tilt = document.getElementById('fx-tilt');
+  var canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+  var noMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (stage && tilt && canHover && !noMotion) {
+    var rx = 0, ry = 0, raf = null;
+    function apply() {
+      raf = null;
+      tilt.style.setProperty('--fx-rx', rx.toFixed(2) + 'deg');
+      tilt.style.setProperty('--fx-ry', ry.toFixed(2) + 'deg');
+    }
+    stage.addEventListener('pointermove', function (e) {
+      var r = stage.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5;   // -0.5 .. 0.5
+      var py = (e.clientY - r.top) / r.height - 0.5;
+      rx = Math.max(-1, Math.min(1, -py * 2)) * 12;      // tilt up/down
+      ry = Math.max(-1, Math.min(1, px * 2)) * 14;       // tilt left/right
+      if (!raf) raf = requestAnimationFrame(apply);
+    });
+    stage.addEventListener('pointerleave', function () {
+      rx = 0; ry = 0;
+      if (!raf) raf = requestAnimationFrame(apply);
     });
   }
 
