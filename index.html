@@ -1,1 +1,580 @@
-TEST
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FireExit — веб-студия | Лендинги, сайты и Telegram-боты</title>
+<meta name="description" content="FireExit — веб-студия, которая делает понятные лендинги, сайты и Telegram-ботов. Первый прототип бесплатно, запуск лендинга за 7–14 дней.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  a{color:inherit;text-decoration:none}
+  a:hover{color:var(--accent,#2E6B3A)}
+  input,textarea,button{font-family:inherit}
+  ::selection{background:var(--accent,#2E6B3A);color:#fff}
+  @keyframes fx-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  @keyframes fx-slide{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fx-parallax{from{transform:translateY(0)}to{transform:translateY(-58px)}}
+  @keyframes fx-bg{0%{background-position:0% 50%,100% 20%,0% 50%}50%{background-position:100% 50%,0% 80%,100% 50%}100%{background-position:0% 50%,100% 20%,0% 50%}}
+  @keyframes fx-orb{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(28px,-34px) scale(1.08)}66%{transform:translate(-22px,20px) scale(.95)}}
+  @keyframes fx-shine{0%{transform:translateX(-120%) skewX(-18deg)}55%,100%{transform:translateX(320%) skewX(-18deg)}}
+  @keyframes fx-spin{to{transform:rotate(360deg)}}
+  @keyframes fx-reveal{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:none}}
+  @keyframes fx-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.72)}}
+  @keyframes fx-nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+  [data-reveal]{opacity:0;transform:translateY(30px) scale(.97);animation:fx-reveal linear both;animation-timeline:view();animation-range:entry 0% cover 30%}
+  [data-parallax]{animation:fx-parallax linear both;animation-timeline:scroll(root);animation-range:0 110vh}
+  .fx-shine-btn{position:relative;overflow:hidden}
+  [data-orb]{animation-name:fx-orb}
+  .fx-nudge svg{transition:transform .2s}
+  .fx-nudge:hover svg{animation:fx-nudge .6s ease-in-out infinite}
+  @keyframes fx-glow{0%,100%{box-shadow:0 20px 44px -26px color-mix(in srgb,var(--accent) 60%,transparent)}50%{box-shadow:0 26px 60px -22px color-mix(in srgb,var(--accent) 92%,transparent)}}
+  @keyframes fx-draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  .fx-track{transform-origin:left center;animation:fx-draw linear both;animation-timeline:view();animation-range:entry 10% cover 40%}
+  .fx-shine-btn::after{content:"";position:absolute;top:0;bottom:0;left:0;width:35%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);transform:translateX(-120%) skewX(-18deg);animation:fx-shine 4.5s ease-in-out infinite;pointer-events:none}
+  @supports not (animation-timeline: view()){[data-reveal]{opacity:1;transform:none;animation:none}[data-parallax]{animation:none}}
+  @media (prefers-reduced-motion: reduce){[data-orb],[data-glow],.fx-track{animation:none!important}[data-glow]{transform:none}.fx-shine-btn::after{animation:none;display:none}}
+</style>
+<style>
+  /* hover / focus effects (compiled from style-hover / style-focus) */
+  .hv-lift2:hover{transform:translateY(-2px)}
+  .hv-lift6:hover{transform:translateY(-6px)}
+  .hv-cream:hover{background:var(--cream)}
+  .hv-svc:hover{transform:translateY(-4px);box-shadow:0 24px 44px -28px rgba(0,0,0,.35)}
+  .hv-step:hover{transform:translateY(-5px);box-shadow:0 22px 44px -28px rgba(0,0,0,.32)}
+  .hv-why:hover{transform:translateY(-4px);background:color-mix(in srgb,var(--cream) 11%,transparent);border-color:color-mix(in srgb,var(--accent-l) 45%,transparent)}
+  .hv-price:hover{transform:translateY(-6px);box-shadow:0 26px 52px -30px rgba(0,0,0,.34);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+  .hv-outline:hover{background:color-mix(in srgb,var(--accent) 8%,var(--cream))}
+  .hv-faq:hover{background:color-mix(in srgb,var(--accent) 7%,var(--cream))}
+  .hv-social:hover{background:rgba(255,255,255,.26)}
+  .field:focus{border-color:var(--accent)}
+  /* responsive nav (compiled from isMobile / isDesktop) */
+  .fx-mobile-only{display:none}
+  .fx-desktop-only{display:block}
+  #fx-mobile-menu{display:none}
+  #fx-mobile-menu.open{display:block}
+  @media (max-width:859px){
+    .fx-desktop-only{display:none}
+    .fx-mobile-only{display:block}
+  }
+</style>
+</head>
+<body>
+<div id="fx-root" style="--accent:#2E6B3A;--accent-d:#1E4E28;--accent-l:#3E9A4E;--ink:#131C16;--cream:#F5F3EC;--paper:#FBFAF5;--muted:#5C6B60;--line:#E1DFD4;font-family:Manrope,system-ui,sans-serif;color:var(--ink);min-height:100vh;overflow-x:hidden;position:relative;background:radial-gradient(48% 55% at 14% 6%,color-mix(in srgb,var(--accent-l) 55%,transparent),transparent 66%),radial-gradient(52% 58% at 90% 22%,color-mix(in srgb,var(--accent) 48%,transparent),transparent 68%),linear-gradient(135deg,#D6E9CC 0%,#EAF2E0 30%,#CFE6C6 58%,#EDF3E5 82%,#DCEBCF 100%);background-size:170% 170%,190% 190%,240% 240%;animation:fx-bg 24s ease-in-out infinite;isolation:isolate">
+
+  <!-- ambient floating orbs -->
+  <div aria-hidden="true" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:-1">
+    <div data-orb style="position:absolute;top:4%;left:-6%;width:min(46vw,520px);height:min(46vw,520px);border-radius:50%;background:radial-gradient(circle at 30% 30%,color-mix(in srgb,var(--accent-l) 70%,transparent),transparent 66%);filter:blur(56px);opacity:.8;animation:fx-orb 20s ease-in-out infinite"></div>
+    <div data-orb style="position:absolute;top:50%;right:-8%;width:min(50vw,560px);height:min(50vw,560px);border-radius:50%;background:radial-gradient(circle at 40% 40%,color-mix(in srgb,var(--accent) 62%,transparent),transparent 68%);filter:blur(64px);opacity:.72;animation:fx-orb 26s ease-in-out infinite reverse"></div>
+    <div data-orb style="position:absolute;top:116%;left:36%;width:min(40vw,440px);height:min(40vw,440px);border-radius:50%;background:radial-gradient(circle at 50% 50%,color-mix(in srgb,var(--accent-l) 58%,transparent),transparent 66%);filter:blur(58px);opacity:.62;animation:fx-orb 30s ease-in-out infinite"></div>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <header style="position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--cream) 72%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)">
+    <nav style="max-width:1200px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+      <a href="#top" style="display:flex;align-items:center;gap:11px;font-family:Space Grotesk,sans-serif;font-weight:700;font-size:20px;letter-spacing:-.02em">
+        <span style="width:38px;height:38px;border-radius:11px;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px -6px color-mix(in srgb,var(--accent) 70%,transparent)">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 6l6 6-6 6"></path></svg>
+        </span>
+        FireExit
+      </a>
+
+      <div class="fx-mobile-only">
+        <button id="fx-burger" aria-label="Меню" style="background:none;border:1px solid var(--line);border-radius:10px;width:44px;height:44px;display:flex;flex-direction:column;gap:5px;align-items:center;justify-content:center;cursor:pointer">
+          <span style="width:18px;height:2px;background:var(--ink);border-radius:2px"></span>
+          <span style="width:18px;height:2px;background:var(--ink);border-radius:2px"></span>
+          <span style="width:18px;height:2px;background:var(--ink);border-radius:2px"></span>
+        </button>
+      </div>
+
+      <div class="fx-desktop-only">
+        <div style="display:flex;align-items:center;gap:32px">
+          <div style="display:flex;gap:28px;font-weight:500;font-size:15px;color:var(--muted)">
+            <a href="#uslugi" style="transition:color .15s">Услуги</a>
+            <a href="#process" style="transition:color .15s">Процесс</a>
+            <a href="#ceny" style="transition:color .15s">Цены</a>
+            <a href="#keysy" style="transition:color .15s">Кейсы</a>
+            <a href="#kontakty" style="transition:color .15s">Контакты</a>
+          </div>
+          <a href="#kontakty" style="background:var(--accent);color:#fff;padding:11px 20px;border-radius:11px;font-weight:600;font-size:15px;transition:transform .15s,box-shadow .15s;box-shadow:0 6px 18px -8px color-mix(in srgb,var(--accent) 80%,transparent)" class="hv-lift2">Обсудить проект</a>
+        </div>
+      </div>
+    </nav>
+
+    <div id="fx-mobile-menu">
+      <div style="border-top:1px solid var(--line);padding:12px 24px 20px;display:flex;flex-direction:column;gap:4px;background:var(--cream)">
+        <a href="#uslugi" style="padding:12px 4px;font-weight:600;border-bottom:1px solid var(--line)">Услуги</a>
+        <a href="#process" style="padding:12px 4px;font-weight:600;border-bottom:1px solid var(--line)">Процесс</a>
+        <a href="#ceny" style="padding:12px 4px;font-weight:600;border-bottom:1px solid var(--line)">Цены</a>
+        <a href="#keysy" style="padding:12px 4px;font-weight:600;border-bottom:1px solid var(--line)">Кейсы</a>
+        <a href="#kontakty" style="background:var(--accent);color:#fff;text-align:center;padding:13px;border-radius:11px;font-weight:600;margin-top:8px">Обсудить проект</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <section id="top" style="position:relative;max-width:1200px;margin:0 auto;padding:clamp(40px,7vw,88px) 24px;display:flex;flex-wrap:wrap;gap:56px;align-items:center">
+    <div style="position:absolute;inset:-15% -35% -15% 25%;background:radial-gradient(58% 68% at 78% 44%,color-mix(in srgb,var(--accent) 17%,transparent),transparent 66%);pointer-events:none;z-index:0"></div>
+    <div data-reveal style="position:relative;z-index:1;flex:1 1 420px;min-width:300px">
+      <span style="display:inline-flex;align-items:center;gap:9px;background:color-mix(in srgb,var(--accent) 12%,var(--cream));color:var(--accent-d);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);padding:7px 14px;border-radius:100px;font-size:13px;font-weight:600;letter-spacing:.01em">
+        <span style="width:7px;height:7px;border-radius:50%;background:var(--accent-l);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 20%,transparent);animation:fx-pulse 2.2s ease-in-out infinite"></span>
+        Молодая студия — работаем за результат
+      </span>
+      <h1 style="font-family:Space Grotesk,sans-serif;font-weight:700;font-size:clamp(36px,5.6vw,62px);line-height:1.03;letter-spacing:-.03em;margin:22px 0 0;text-wrap:balance">
+        Ваш выход к сайту, который приводит клиентов
+      </h1>
+      <p style="font-size:clamp(16px,1.7vw,19px);line-height:1.6;color:var(--muted);margin:22px 0 0;max-width:520px;text-wrap:pretty">
+        FireExit — веб-студия, которая делает понятные лендинги, сайты и ботов. Без пафоса и раздутых смет: договорились, сделали, запустили.
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:34px">
+        <a href="#kontakty" class="fx-shine-btn fx-nudge hv-lift2" style="display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;padding:15px 26px;border-radius:13px;font-weight:600;font-size:16px;box-shadow:0 12px 28px -12px color-mix(in srgb,var(--accent) 85%,transparent);transition:transform .15s">
+          Обсудить проект
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 6l6 6-6 6"></path></svg>
+        </a>
+        <a href="#uslugi" style="display:inline-flex;align-items:center;gap:8px;background:var(--paper);color:var(--ink);padding:15px 24px;border-radius:13px;font-weight:600;font-size:16px;border:1px solid var(--line);transition:background .15s" class="hv-cream">Что мы умеем</a>
+      </div>
+      <div style="display:flex;gap:36px;margin-top:44px;flex-wrap:wrap">
+        <div><div style="font-family:Space Grotesk,sans-serif;font-size:30px;font-weight:700;color:var(--accent-d)">7–14</div><div style="font-size:13.5px;color:var(--muted);margin-top:2px">дней на лендинг</div></div>
+        <div style="width:1px;background:var(--line)"></div>
+        <div><div style="font-family:Space Grotesk,sans-serif;font-size:30px;font-weight:700;color:var(--accent-d)">100%</div><div style="font-size:13.5px;color:var(--muted);margin-top:2px">на связи в чате</div></div>
+        <div style="width:1px;background:var(--line)"></div>
+        <div><div style="font-family:Space Grotesk,sans-serif;font-size:30px;font-weight:700;color:var(--accent-d)">от 0₽</div><div style="font-size:13.5px;color:var(--muted);margin-top:2px">правки в работе</div></div>
+      </div>
+    </div>
+
+    <!-- Exit-sign concept visual -->
+    <div style="position:relative;z-index:1;flex:1 1 360px;min-width:280px;display:flex;justify-content:center">
+      <div data-parallax style="position:relative;width:100%;max-width:420px;will-change:transform">
+        <div style="background:var(--accent);border-radius:28px;padding:44px 40px;color:#fff;box-shadow:0 30px 60px -30px color-mix(in srgb,var(--accent-d) 90%,transparent);position:relative;overflow:hidden">
+          <div style="position:absolute;inset:0;background:radial-gradient(120% 90% at 80% 0%,color-mix(in srgb,#fff 14%,transparent),transparent 60%)"></div>
+          <div style="position:relative;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:13px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;opacity:.85">Выход есть</span>
+            <span style="font-size:11px;font-weight:600;letter-spacing:.1em;opacity:.7;border:1px solid rgba(255,255,255,.35);padding:4px 9px;border-radius:100px">EXIT</span>
+          </div>
+          <div style="position:relative;display:flex;align-items:center;gap:18px;margin:30px 0 8px">
+            <svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>
+            <div>
+              <div style="font-family:Space Grotesk,sans-serif;font-size:26px;font-weight:700;line-height:1.1">Из идеи —<br>в рабочий сайт</div>
+            </div>
+          </div>
+        </div>
+        <!-- floating chip -->
+        <div style="position:absolute;bottom:-22px;left:-14px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px 18px;box-shadow:0 18px 40px -20px rgba(0,0,0,.3);animation:fx-float 5s ease-in-out infinite">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="width:34px;height:34px;border-radius:9px;background:color-mix(in srgb,var(--accent) 15%,var(--cream));display:flex;align-items:center;justify-content:center">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="var(--accent-d)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+            </span>
+            <div><div style="font-size:14px;font-weight:700">Адаптив под мобилки</div><div style="font-size:12px;color:var(--muted)">по умолчанию</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- guarantee strip -->
+  <div style="border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper)">
+    <div style="max-width:1200px;margin:0 auto;padding:22px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:18px 44px;justify-content:center">
+      <div style="display:flex;align-items:center;gap:11px">
+        <span style="width:30px;height:30px;border-radius:9px;background:color-mix(in srgb,var(--accent) 14%,var(--cream));display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent-d)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>
+        <span style="font-size:15px;font-weight:600">Первый прототип — бесплатно</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:11px">
+        <span style="width:30px;height:30px;border-radius:9px;background:color-mix(in srgb,var(--accent) 14%,var(--cream));display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent-d)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>
+        <span style="font-size:15px;font-weight:600">Не понравилось — не платите</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:11px">
+        <span style="width:30px;height:30px;border-radius:9px;background:color-mix(in srgb,var(--accent) 14%,var(--cream));display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent-d)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>
+        <span style="font-size:15px;font-weight:600">На связи каждый день, отвечаем быстро</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ УСЛУГИ ============ -->
+  <section id="uslugi" style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,96px) 24px">
+    <div data-reveal style="max-width:640px">
+      <span style="font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-d)">Услуги</span>
+      <h2 style="font-family:Space Grotesk,sans-serif;font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.02em;line-height:1.08;margin:14px 0 0;text-wrap:balance">Делаем то, что реально двигает бизнес вперёд</h2>
+      <p style="font-size:17px;color:var(--muted);line-height:1.6;margin:16px 0 0">Не пытаемся продать всё сразу. Берём задачу, которая принесёт вам результат быстрее всего.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:44px">
+      <!-- card 1 -->
+      <div data-reveal style="background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:30px;transition:transform .18s,box-shadow .18s" class="hv-svc">
+        <span style="width:52px;height:52px;border-radius:14px;background:color-mix(in srgb,var(--accent) 14%,var(--cream));display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent-d)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"></rect><path d="M3 9h18M8 21h8"></path></svg>
+        </span>
+        <h3 style="font-family:Space Grotesk,sans-serif;font-size:21px;font-weight:600;margin:20px 0 0">Лендинги и сайты</h3>
+        <p style="font-size:15px;color:var(--muted);line-height:1.6;margin:10px 0 0">Продающие одностраничники и многостраничные сайты. Собираем структуру, тексты и дизайн под вашу задачу.</p>
+      </div>
+      <!-- card 2 -->
+      <div data-reveal style="background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:30px;transition:transform .18s,box-shadow .18s" class="hv-svc">
+        <span style="width:52px;height:52px;border-radius:14px;background:color-mix(in srgb,var(--accent) 14%,var(--cream));display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent-d)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="2"></rect><path d="M12 8V4M9 14h.01M15 14h.01M2 12v3M22 12v3"></path></svg>
+        </span>
+        <h3 style="font-family:Space Grotesk,sans-serif;font-size:21px;font-weight:600;margin:20px 0 0">Боты и автоматизация</h3>
+        <p style="font-size:15px;color:var(--muted);line-height:1.6;margin:10px 0 0">Telegram-боты, чат-формы, автоответы и связки с CRM. Убираем рутину и ловим заявки 24/7.</p>
+      </div>
+      <!-- card 3 -->
+      <div data-reveal style="background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:30px;transition:transform .18s,box-shadow .18s" class="hv-svc">
+        <span style="width:52px;height:52px;border-radius:14px;background:color-mix(in srgb,var(--accent) 14%,var(--cream));display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent-d)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
+        </span>
+        <h3 style="font-family:Space Grotesk,sans-serif;font-size:21px;font-weight:600;margin:20px 0 0">Дизайн и прототипы</h3>
+        <p style="font-size:15px;color:var(--muted);line-height:1.6;margin:10px 0 0">Современный, чистый UI. Покажем макет до вёрстки — вы видите результат заранее и без сюрпризов.</p>
+      </div>
+      <!-- card 4 -->
+      <div data-reveal style="background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:30px;transition:transform .18s,box-shadow .18s" class="hv-svc">
+        <span style="width:52px;height:52px;border-radius:14px;background:color-mix(in srgb,var(--accent) 14%,var(--cream));display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent-d)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6M9 15l2 2 4-4"></path></svg>
+        </span>
+        <h3 style="font-family:Space Grotesk,sans-serif;font-size:21px;font-weight:600;margin:20px 0 0">Доработка и поддержка</h3>
+        <p style="font-size:15px;color:var(--muted);line-height:1.6;margin:10px 0 0">Есть сайт, но он не работает? Обновим, ускорим, подключим аналитику и доведём до ума.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ПРОЦЕСС ============ -->
+  <section id="process" style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,96px) 24px">
+    <div data-reveal style="max-width:640px">
+      <span style="font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-d)">Как мы работаем</span>
+      <h2 style="font-family:Space Grotesk,sans-serif;font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.02em;line-height:1.08;margin:14px 0 0;text-wrap:balance">Простой процесс из 4 шагов</h2>
+      <p style="font-size:17px;color:var(--muted);line-height:1.6;margin:16px 0 0">Вы всегда знаете, что происходит сейчас и что будет дальше. Никакой магии за закрытой дверью.</p>
+    </div>
+    <div class="fx-track" style="height:3px;background:linear-gradient(90deg,var(--accent-l),var(--accent));border-radius:3px;margin-top:40px"></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-top:20px">
+      <div data-reveal style="background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:28px;transition:transform .2s,box-shadow .2s" class="hv-step">
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;background:var(--accent);color:#fff;font-family:Space Grotesk,sans-serif;font-weight:700;font-size:18px">01</span>
+        <h3 style="font-family:Space Grotesk,sans-serif;font-size:19px;font-weight:600;margin:18px 0 0">Заявка и бриф</h3>
+        <p style="font-size:14.5px;color:var(--muted);line-height:1.6;margin:9px 0 0">Обсуждаем задачу, цели и сроки. Задаём вопросы, чтобы понять ваш бизнес.</p>
+      </div>
+      <div data-reveal style="background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:28px;transition:transform .2s,box-shadow .2s" class="hv-step">
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;background:var(--accent);color:#fff;font-family:Space Grotesk,sans-serif;font-weight:700;font-size:18px">02</span>
+        <h3 style="font-family:Space Grotesk,sans-serif;font-size:19px;font-weight:600;margin:18px 0 0">Прототип и смета</h3>
+        <p style="font-size:14.5px;color:var(--muted);line-height:1.6;margin:9px 0 0">Показываем структуру будущего сайта и фиксируем стоимость. Это бесплатно.</p>
+      </div>
+      <div data-reveal style="background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:28px;transition:transform .2s,box-shadow .2s" class="hv-step">
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;background:var(--accent);color:#fff;font-family:Space Grotesk,sans-serif;font-weight:700;font-size:18px">03</span>
+        <h3 style="font-family:Space Grotesk,sans-serif;font-size:19px;font-weight:600;margin:18px 0 0">Дизайн и разработка</h3>
+        <p style="font-size:14.5px;color:var(--muted);line-height:1.6;margin:9px 0 0">Рисуем макет, согласуем с вами и собираем адаптивный сайт под все экраны.</p>
+      </div>
+      <div data-reveal style="background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:28px;transition:transform .2s,box-shadow .2s" class="hv-step">
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;background:var(--accent);color:#fff;font-family:Space Grotesk,sans-serif;font-weight:700;font-size:18px">04</span>
+        <h3 style="font-family:Space Grotesk,sans-serif;font-size:19px;font-weight:600;margin:18px 0 0">Запуск и поддержка</h3>
+        <p style="font-size:14.5px;color:var(--muted);line-height:1.6;margin:9px 0 0">Публикуем, подключаем аналитику и остаёмся на связи после запуска.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ПОЧЕМУ МЫ ============ -->
+  <section id="pochemu" style="background:var(--ink);color:var(--cream);position:relative;overflow:hidden"><div aria-hidden="true" data-orb style="position:absolute;top:-20%;right:-10%;width:min(50vw,560px);height:min(50vw,560px);border-radius:50%;background:radial-gradient(circle at 50% 50%,color-mix(in srgb,var(--accent-l) 45%,transparent),transparent 68%);filter:blur(70px);opacity:.45;pointer-events:none;animation:fx-orb 24s ease-in-out infinite"></div>
+    <div style="position:relative;max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,96px) 24px;display:flex;flex-wrap:wrap;gap:56px">
+      <div data-reveal style="flex:1 1 340px;min-width:280px">
+        <span style="font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-l)">Почему мы</span>
+        <h2 style="font-family:Space Grotesk,sans-serif;font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.02em;line-height:1.08;margin:14px 0 0;text-wrap:balance">Мы новички по возрасту, но не по подходу</h2>
+        <p style="font-size:17px;line-height:1.6;color:color-mix(in srgb,var(--cream) 72%,transparent);margin:18px 0 0">Честно: у нас пока нет сотни кейсов. Зато есть время, внимание к каждому проекту и желание сделать так, чтобы вы нас рекомендовали.</p>
+        <a href="#kontakty" class="fx-nudge hv-lift2" style="display:inline-flex;align-items:center;gap:10px;background:var(--accent-l);color:var(--ink);padding:14px 24px;border-radius:13px;font-weight:700;font-size:16px;margin-top:30px;transition:transform .15s">
+          Начать проект
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 6l6 6-6 6"></path></svg>
+        </a>
+      </div>
+      <div style="flex:1 1 380px;min-width:280px;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;align-content:start">
+        <div data-reveal style="background:color-mix(in srgb,var(--cream) 6%,transparent);border:1px solid color-mix(in srgb,var(--cream) 12%,transparent);border-radius:18px;padding:24px;transition:transform .2s,background .2s,border-color .2s" class="hv-why">
+          <div style="font-family:Space Grotesk,sans-serif;font-size:15px;font-weight:600;color:var(--accent-l)">01</div>
+          <h4 style="font-size:18px;font-weight:700;margin:12px 0 0">Прозрачные цены</h4>
+          <p style="font-size:14.5px;line-height:1.55;color:color-mix(in srgb,var(--cream) 66%,transparent);margin:8px 0 0">Смета до старта. Никаких «внезапно дороже» в процессе.</p>
+        </div>
+        <div data-reveal style="background:color-mix(in srgb,var(--cream) 6%,transparent);border:1px solid color-mix(in srgb,var(--cream) 12%,transparent);border-radius:18px;padding:24px;transition:transform .2s,background .2s,border-color .2s" class="hv-why">
+          <div style="font-family:Space Grotesk,sans-serif;font-size:15px;font-weight:600;color:var(--accent-l)">02</div>
+          <h4 style="font-size:18px;font-weight:700;margin:12px 0 0">Личное внимание</h4>
+          <p style="font-size:14.5px;line-height:1.55;color:color-mix(in srgb,var(--cream) 66%,transparent);margin:8px 0 0">Вы общаетесь с теми, кто делает проект, а не с колл-центром.</p>
+        </div>
+        <div data-reveal style="background:color-mix(in srgb,var(--cream) 6%,transparent);border:1px solid color-mix(in srgb,var(--cream) 12%,transparent);border-radius:18px;padding:24px;transition:transform .2s,background .2s,border-color .2s" class="hv-why">
+          <div style="font-family:Space Grotesk,sans-serif;font-size:15px;font-weight:600;color:var(--accent-l)">03</div>
+          <h4 style="font-size:18px;font-weight:700;margin:12px 0 0">Быстрый старт</h4>
+          <p style="font-size:14.5px;line-height:1.55;color:color-mix(in srgb,var(--cream) 66%,transparent);margin:8px 0 0">Берёмся сразу и держим сроки. Лендинг — за 1–2 недели.</p>
+        </div>
+        <div data-reveal style="background:color-mix(in srgb,var(--cream) 6%,transparent);border:1px solid color-mix(in srgb,var(--cream) 12%,transparent);border-radius:18px;padding:24px;transition:transform .2s,background .2s,border-color .2s" class="hv-why">
+          <div style="font-family:Space Grotesk,sans-serif;font-size:15px;font-weight:600;color:var(--accent-l)">04</div>
+          <h4 style="font-size:18px;font-weight:700;margin:12px 0 0">Современный стек</h4>
+          <p style="font-size:14.5px;line-height:1.55;color:color-mix(in srgb,var(--cream) 66%,transparent);margin:8px 0 0">Быстрые, адаптивные сайты, которые хорошо выглядят на любом экране.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ЦЕНЫ ============ -->
+  <section id="ceny" style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,96px) 24px">
+    <div data-reveal style="max-width:640px">
+      <span style="font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-d)">Цены</span>
+      <h2 style="font-family:Space Grotesk,sans-serif;font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.02em;line-height:1.08;margin:14px 0 0;text-wrap:balance">Понятные пакеты без скрытых доплат</h2>
+      <p style="font-size:17px;color:var(--muted);line-height:1.6;margin:16px 0 0">Это ориентир для старта. Точную стоимость под вашу задачу посчитаем бесплатно после короткого брифа.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px;margin-top:48px;align-items:start">
+      <div data-reveal style="border:1px solid var(--line);border-radius:24px;padding:32px;background:var(--paper);display:flex;flex-direction:column;height:100%;transition:transform .2s,box-shadow .2s,border-color .2s" class="hv-price">
+        <h3 style="font-family:Space Grotesk,sans-serif;font-size:20px;font-weight:600">Лендинг</h3>
+        <p style="font-size:14px;color:var(--muted);margin:8px 0 0;line-height:1.5">Одна страница, которая продаёт</p>
+        <div style="display:flex;align-items:baseline;gap:6px;margin:22px 0 0"><span style="font-size:14px;color:var(--muted)">от</span><span style="font-family:Space Grotesk,sans-serif;font-size:34px;font-weight:700">15 000 ₽</span></div>
+        <div style="height:1px;background:var(--line);margin:22px 0"></div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.45"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"></path></svg><span>Дизайн под ваш бренд</span></div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.45"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"></path></svg><span>Адаптив под мобильные</span></div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.45"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"></path></svg><span>Форма заявки и связь</span></div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.45"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"></path></svg><span>Запуск за 7–14 дней</span></div>
+        </div>
+        <a href="#kontakty" style="margin-top:auto;padding-top:26px"><span style="display:block;text-align:center;background:var(--paper);border:1px solid var(--accent);color:var(--accent-d);padding:13px;border-radius:12px;font-weight:600;font-size:15px;transition:background .15s" class="hv-outline">Выбрать</span></a>
+      </div>
+
+      <div data-reveal data-glow style="border:2px solid var(--accent);border-radius:24px;padding:32px;background:var(--paper);display:flex;flex-direction:column;height:100%;position:relative;box-shadow:0 24px 50px -30px color-mix(in srgb,var(--accent) 55%,transparent);animation:fx-glow 3.6s ease-in-out infinite;transition:transform .2s" class="hv-lift6">
+        <span class="fx-shine-btn" style="position:absolute;top:-13px;left:32px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;padding:5px 12px;border-radius:100px">Популярно</span>
+        <h3 style="font-family:Space Grotesk,sans-serif;font-size:20px;font-weight:600">Сайт «под ключ»</h3>
+        <p style="font-size:14px;color:var(--muted);margin:8px 0 0;line-height:1.5">Многостраничный сайт для бизнеса</p>
+        <div style="display:flex;align-items:baseline;gap:6px;margin:22px 0 0"><span style="font-size:14px;color:var(--muted)">от</span><span style="font-family:Space Grotesk,sans-serif;font-size:34px;font-weight:700">35 000 ₽</span></div>
+        <div style="height:1px;background:var(--line);margin:22px 0"></div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.45"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"></path></svg><span>Всё из пакета «Лендинг»</span></div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.45"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"></path></svg><span>До 5–7 страниц</span></div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.45"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"></path></svg><span>Подключение аналитики</span></div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.45"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"></path></svg><span>Базовая SEO-настройка</span></div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.45"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"></path></svg><span>Поддержка 1 месяц в подарок</span></div>
+        </div>
+        <a href="#kontakty" style="margin-top:auto;padding-top:26px"><span style="display:block;text-align:center;background:var(--accent);color:#fff;padding:14px;border-radius:12px;font-weight:700;font-size:15px;box-shadow:0 10px 24px -12px color-mix(in srgb,var(--accent) 85%,transparent);transition:transform .15s" class="hv-lift2">Обсудить проект</span></a>
+      </div>
+
+      <div data-reveal style="border:1px solid var(--line);border-radius:24px;padding:32px;background:var(--paper);display:flex;flex-direction:column;height:100%;transition:transform .2s,box-shadow .2s,border-color .2s" class="hv-price">
+        <h3 style="font-family:Space Grotesk,sans-serif;font-size:20px;font-weight:600">Боты и автоматизация</h3>
+        <p style="font-size:14px;color:var(--muted);margin:8px 0 0;line-height:1.5">Telegram-бот или автоворонка</p>
+        <div style="display:flex;align-items:baseline;gap:6px;margin:22px 0 0"><span style="font-size:14px;color:var(--muted)">от</span><span style="font-family:Space Grotesk,sans-serif;font-size:34px;font-weight:700">12 000 ₽</span></div>
+        <div style="height:1px;background:var(--line);margin:22px 0"></div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.45"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"></path></svg><span>Приём заявок 24/7</span></div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.45"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"></path></svg><span>Автоответы и меню</span></div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.45"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"></path></svg><span>Связка с таблицами / CRM</span></div>
+          <div style="display:flex;align-items:flex-start;gap:10px;font-size:14.5px;line-height:1.45"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M20 6L9 17l-5-5"></path></svg><span>Настройка и запуск под ключ</span></div>
+        </div>
+        <a href="#kontakty" style="margin-top:auto;padding-top:26px"><span style="display:block;text-align:center;background:var(--paper);border:1px solid var(--accent);color:var(--accent-d);padding:13px;border-radius:12px;font-weight:600;font-size:15px;transition:background .15s" class="hv-outline">Выбрать</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ КЕЙСЫ ============ -->
+  <section id="keysy" style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,96px) 24px">
+    <div data-reveal style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between">
+      <div style="max-width:620px">
+        <span style="font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-d)">Кейсы</span>
+        <h2 style="font-family:Space Grotesk,sans-serif;font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.02em;line-height:1.08;margin:14px 0 0;text-wrap:balance">Портфолио, которое растёт вместе с нами</h2>
+        <p style="font-size:17px;color:var(--muted);line-height:1.6;margin:16px 0 0">Первые проекты уже в работе. Здесь будут ваши — станьте одним из наших первых кейсов на особых условиях.</p>
+      </div>
+      <a href="#kontakty" style="font-weight:600;color:var(--accent-d);display:inline-flex;align-items:center;gap:7px;white-space:nowrap">Стать кейсом <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 6l6 6-6 6"></path></svg></a>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;margin-top:44px">
+      <div data-reveal style="border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--paper)">
+        <div style="aspect-ratio:16/11;background:repeating-linear-gradient(135deg,var(--cream),var(--cream) 11px,#ECEAE0 11px,#ECEAE0 22px);display:flex;align-items:center;justify-content:center;position:relative">
+          <span style="position:absolute;top:14px;left:14px;background:color-mix(in srgb,var(--accent) 16%,var(--cream));color:var(--accent-d);font-size:12px;font-weight:700;padding:5px 11px;border-radius:100px">в разработке</span>
+          <span style="font-family:monospace;font-size:12px;color:var(--muted);background:var(--paper);padding:6px 12px;border-radius:8px;border:1px solid var(--line)">скриншот проекта</span>
+        </div>
+        <div style="padding:22px 24px">
+          <h3 style="font-family:Space Grotesk,sans-serif;font-size:19px;font-weight:600">Лендинг для кофейни</h3>
+          <p style="font-size:14.5px;color:var(--muted);line-height:1.55;margin:8px 0 0">Меню, карта и онлайн-бронь стола в один экран.</p>
+        </div>
+      </div>
+      <div data-reveal style="border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--paper)">
+        <div style="aspect-ratio:16/11;background:repeating-linear-gradient(135deg,var(--cream),var(--cream) 11px,#ECEAE0 11px,#ECEAE0 22px);display:flex;align-items:center;justify-content:center;position:relative">
+          <span style="position:absolute;top:14px;left:14px;background:color-mix(in srgb,var(--accent) 16%,var(--cream));color:var(--accent-d);font-size:12px;font-weight:700;padding:5px 11px;border-radius:100px">в разработке</span>
+          <span style="font-family:monospace;font-size:12px;color:var(--muted);background:var(--paper);padding:6px 12px;border-radius:8px;border:1px solid var(--line)">скриншот проекта</span>
+        </div>
+        <div style="padding:22px 24px">
+          <h3 style="font-family:Space Grotesk,sans-serif;font-size:19px;font-weight:600">Бот для онлайн-школы</h3>
+          <p style="font-size:14.5px;color:var(--muted);line-height:1.55;margin:8px 0 0">Запись на урок и напоминания прямо в Telegram.</p>
+        </div>
+      </div>
+      <div data-reveal style="border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--paper)">
+        <div style="aspect-ratio:16/11;background:repeating-linear-gradient(135deg,var(--cream),var(--cream) 11px,#ECEAE0 11px,#ECEAE0 22px);display:flex;align-items:center;justify-content:center;position:relative">
+          <span style="position:absolute;top:14px;left:14px;background:color-mix(in srgb,var(--accent) 16%,var(--cream));color:var(--accent-d);font-size:12px;font-weight:700;padding:5px 11px;border-radius:100px">в разработке</span>
+          <span style="font-family:monospace;font-size:12px;color:var(--muted);background:var(--paper);padding:6px 12px;border-radius:8px;border:1px solid var(--line)">скриншот проекта</span>
+        </div>
+        <div style="padding:22px 24px">
+          <h3 style="font-family:Space Grotesk,sans-serif;font-size:19px;font-weight:600">Сайт мастера маникюра</h3>
+          <p style="font-size:14.5px;color:var(--muted);line-height:1.55;margin:8px 0 0">Портфолио, цены и запись — всё на одной странице.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section id="faq" style="max-width:1200px;margin:0 auto;padding:clamp(56px,8vw,96px) 24px">
+    <div data-reveal style="text-align:center;max-width:640px;margin:0 auto">
+      <span style="font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-d)">FAQ</span>
+      <h2 style="font-family:Space Grotesk,sans-serif;font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.02em;line-height:1.08;margin:14px 0 0;text-wrap:balance">Частые вопросы</h2>
+    </div>
+    <div data-reveal style="max-width:780px;margin:40px auto 0;background:var(--paper);border:1px solid var(--line);border-radius:22px;overflow:hidden">
+      <div data-reveal style="border-bottom:1px solid var(--line)">
+        <button data-faq="0" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 26px;background:none;border:none;cursor:pointer;text-align:left;transition:background .18s" class="hv-faq">
+          <span style="font-size:17px;font-weight:600;color:var(--ink)">Сколько стоит сайт?</span>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .25s;flex-shrink:0"><path d="M6 9l6 6 6-6"></path></svg>
+        </button>
+        <div data-faq-panel="0" hidden style="padding:0 26px 22px;font-size:15px;line-height:1.6;color:var(--muted);max-width:640px">Лендинг — от 15 000 ₽, сайт «под ключ» — от 35 000 ₽, бот — от 12 000 ₽. Точную смету под вашу задачу посчитаем бесплатно после короткого брифа.</div>
+      </div>
+      <div data-reveal style="border-bottom:1px solid var(--line)">
+        <button data-faq="1" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 26px;background:none;border:none;cursor:pointer;text-align:left;transition:background .18s" class="hv-faq">
+          <span style="font-size:17px;font-weight:600;color:var(--ink)">Как быстро вы сделаете?</span>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .25s;flex-shrink:0"><path d="M6 9l6 6 6-6"></path></svg>
+        </button>
+        <div data-faq-panel="1" hidden style="padding:0 26px 22px;font-size:15px;line-height:1.6;color:var(--muted);max-width:640px">Лендинг обычно занимает 7–14 дней, бот — от 3 дней. Точные сроки фиксируем в самом начале и держим их.</div>
+      </div>
+      <div data-reveal style="border-bottom:1px solid var(--line)">
+        <button data-faq="2" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 26px;background:none;border:none;cursor:pointer;text-align:left;transition:background .18s" class="hv-faq">
+          <span style="font-size:17px;font-weight:600;color:var(--ink)">А если мне не понравится?</span>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .25s;flex-shrink:0"><path d="M6 9l6 6 6-6"></path></svg>
+        </button>
+        <div data-faq-panel="2" hidden style="padding:0 26px 22px;font-size:15px;line-height:1.6;color:var(--muted);max-width:640px">Первый прототип мы показываем бесплатно. Если направление не подошло — вы ничего не платите и ничем не рискуете.</div>
+      </div>
+      <div data-reveal style="border-bottom:1px solid var(--line)">
+        <button data-faq="3" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 26px;background:none;border:none;cursor:pointer;text-align:left;transition:background .18s" class="hv-faq">
+          <span style="font-size:17px;font-weight:600;color:var(--ink)">Вы новички — это не рискованно?</span>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .25s;flex-shrink:0"><path d="M6 9l6 6 6-6"></path></svg>
+        </button>
+        <div data-faq-panel="3" hidden style="padding:0 26px 22px;font-size:15px;line-height:1.6;color:var(--muted);max-width:640px">Мы молодая студия, поэтому вкладываемся в каждый проект по максимуму. Работаем по этапам, оплата — частями, а первый прототип бесплатный.</div>
+      </div>
+      <div data-reveal>
+        <button data-faq="4" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 26px;background:none;border:none;cursor:pointer;text-align:left;transition:background .18s" class="hv-faq">
+          <span style="font-size:17px;font-weight:600;color:var(--ink)">Что нужно от меня для старта?</span>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .25s;flex-shrink:0"><path d="M6 9l6 6 6-6"></path></svg>
+        </button>
+        <div data-faq-panel="4" hidden style="padding:0 26px 22px;font-size:15px;line-height:1.6;color:var(--muted);max-width:640px">Пара слов о задаче и примеры, которые вам нравятся. Остальное — структуру, тексты и дизайн — берём на себя.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ КОНТАКТЫ / CTA ============ -->
+  <section id="kontakty" style="max-width:1200px;margin:0 auto;padding:clamp(20px,4vw,40px) 24px clamp(56px,8vw,90px)">
+    <div style="background:var(--accent);border-radius:32px;padding:clamp(32px,5vw,64px);color:#fff;position:relative;overflow:hidden">
+      <div style="position:absolute;inset:0;background:radial-gradient(90% 120% at 100% 0%,color-mix(in srgb,#fff 12%,transparent),transparent 55%)"></div>
+      <div style="position:relative;display:flex;flex-wrap:wrap;gap:48px">
+        <div style="flex:1 1 340px;min-width:280px">
+          <h2 style="font-family:Space Grotesk,sans-serif;font-size:clamp(28px,4.2vw,46px);font-weight:700;letter-spacing:-.02em;line-height:1.06;text-wrap:balance">Расскажите о задаче — предложим решение</h2>
+          <p style="font-size:17px;line-height:1.6;color:rgba(255,255,255,.85);margin:18px 0 0;max-width:440px">Ответим в течение дня. Бесплатно оценим объём, сроки и стоимость — без обязательств.</p>
+
+          <a href="tel:+79000000000" style="display:inline-flex;align-items:center;gap:14px;margin-top:34px">
+            <span style="width:52px;height:52px;border-radius:14px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </span>
+            <span><span style="display:block;font-size:13px;color:rgba(255,255,255,.7)">Позвонить</span><span style="font-family:Space Grotesk,sans-serif;font-size:22px;font-weight:600">+7 900 000-00-00</span></span>
+          </a>
+
+          <div style="display:flex;gap:12px;margin-top:26px;flex-wrap:wrap">
+            <a href="https://t.me/" style="display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.16);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;font-size:15px;transition:background .15s" class="hv-social">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M21.9 4.3L2.7 11.7c-1 .4-1 1.1-.2 1.3l4.9 1.5 1.9 5.8c.2.7.6.8 1.2.3l2.7-2.5 4.8 3.5c.9.5 1.5.2 1.7-.8l3.1-14.6c.3-1.2-.5-1.7-1.6-1.4z"></path></svg>
+              Telegram
+            </a>
+            <a href="https://wa.me/" style="display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.16);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;font-size:15px;transition:background .15s" class="hv-social">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.7-.1-.4-.1-.9-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 .9-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.1.1.3 0 .5-.1.2-.2.4-.3.5l-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.7.9.2.1.4.2.4.3.1.1.1.6-.1 1.1z"></path></svg>
+              WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <!-- form -->
+        <div style="flex:1 1 320px;min-width:280px">
+          <div id="fx-form-success" hidden>
+            <div style="background:var(--paper);border-radius:22px;padding:40px 32px;color:var(--ink);text-align:center;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:340px">
+              <span style="width:64px;height:64px;border-radius:50%;background:color-mix(in srgb,var(--accent) 16%,var(--cream));display:flex;align-items:center;justify-content:center">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="var(--accent-d)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+              </span>
+              <h3 style="font-family:Space Grotesk,sans-serif;font-size:24px;font-weight:700;margin:20px 0 0">Заявка отправлена!</h3>
+              <p style="font-size:15px;color:var(--muted);line-height:1.6;margin:10px 0 0">Спасибо! Мы свяжемся с вами в ближайшее время.</p>
+            </div>
+          </div>
+          <div id="fx-form-wrap">
+            <form id="fx-form" style="background:var(--paper);border-radius:22px;padding:28px;color:var(--ink);display:flex;flex-direction:column;gap:14px">
+              <div>
+                <label style="font-size:13px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">Как вас зовут</label>
+                <input name="name" placeholder="Имя" required="" style="width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:12px;font-size:15px;background:var(--cream);outline:none" class="field">
+              </div>
+              <div>
+                <label style="font-size:13px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">Телефон или Telegram</label>
+                <input name="contact" placeholder="+7 ... или @username" required="" style="width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:12px;font-size:15px;background:var(--cream);outline:none" class="field">
+              </div>
+              <div>
+                <label style="font-size:13px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">О проекте</label>
+                <textarea name="message" placeholder="Пара слов о задаче" rows="3" style="width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:12px;font-size:15px;background:var(--cream);outline:none;resize:vertical" class="field"></textarea>
+              </div>
+              <button type="submit" class="fx-shine-btn hv-lift2" style="background:var(--accent);color:#fff;border:none;padding:15px;border-radius:12px;font-weight:700;font-size:16px;cursor:pointer;margin-top:4px;transition:transform .15s">Отправить заявку</button>
+              <p style="font-size:12.5px;color:var(--muted);text-align:center;line-height:1.5">Нажимая кнопку, вы соглашаетесь на обработку данных</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer style="border-top:1px solid var(--line);background:var(--paper)">
+    <div style="max-width:1200px;margin:0 auto;padding:34px 24px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:11px;font-family:Space Grotesk,sans-serif;font-weight:700;font-size:18px">
+        <span style="width:32px;height:32px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 6l6 6-6 6"></path></svg>
+        </span>
+        FireExit
+      </div>
+      <p style="font-size:14px;color:var(--muted)">© <span id="fx-year">2026</span> FireExit — веб-студия. Ваш выход к сильному сайту.</p>
+      <div style="display:flex;gap:18px;font-size:14px;font-weight:600;color:var(--muted)">
+        <a href="#uslugi">Услуги</a>
+        <a href="#keysy">Кейсы</a>
+        <a href="#kontakty">Контакты</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+<script>
+(function () {
+  var burger = document.getElementById('fx-burger');
+  var menu = document.getElementById('fx-mobile-menu');
+  if (burger && menu) {
+    burger.addEventListener('click', function () { menu.classList.toggle('open'); });
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { menu.classList.remove('open'); });
+    });
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 860) menu.classList.remove('open');
+    });
+  }
+
+  document.querySelectorAll('[data-faq]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var i = btn.getAttribute('data-faq');
+      var panel = document.querySelector('[data-faq-panel="' + i + '"]');
+      var willOpen = panel && panel.hidden;
+      document.querySelectorAll('[data-faq-panel]').forEach(function (p) { p.hidden = true; });
+      document.querySelectorAll('[data-faq] svg').forEach(function (s) { s.style.transform = 'rotate(0deg)'; });
+      if (willOpen) {
+        panel.hidden = false;
+        var sv = btn.querySelector('svg');
+        if (sv) sv.style.transform = 'rotate(180deg)';
+      }
+    });
+  });
+
+  var form = document.getElementById('fx-form');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var wrap = document.getElementById('fx-form-wrap');
+      var ok = document.getElementById('fx-form-success');
+      if (wrap) wrap.hidden = true;
+      if (ok) ok.hidden = false;
+    });
+  }
+
+  var y = document.getElementById('fx-year');
+  if (y) y.textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
+
