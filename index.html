@@ -10,8 +10,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  /* fill html/body with the theme base so the animated #fx-root layer can't
+     expose a white gap at the top/bottom edges during fast scroll or overscroll */
+  html{scroll-behavior:smooth;background:#EAF2E0;overscroll-behavior:none}
+  body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;background:#EAF2E0}
   a{color:inherit;text-decoration:none}
   a:hover{color:var(--accent,#2E6B3A)}
   input,textarea,button{font-family:inherit}
